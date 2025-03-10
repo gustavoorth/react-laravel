@@ -40,3 +40,13 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Car {
+    id: number;
+    year: number;
+    body_type: string;
+    maker: string;
+    mileage: number;
+    model: string;
+    [key: string]: unknown; // This allows for additional properties...
+}

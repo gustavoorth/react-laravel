@@ -16,7 +16,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Cars',
-        url: '/cards',
+        url: '/cars',
         icon: Car,
     },
 ];
