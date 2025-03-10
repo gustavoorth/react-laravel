@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type Car } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import InputError from '@/components/input-error';
+import { FormEventHandler, useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,8 +18,29 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type CreateCarForm = {
+    brand: NonNullable<string>;
+    model: NonNullable<string>;
+    mileage: NonNullable<number>;
+    year: NonNullable<number>;
+    body_type: NonNullable<string>;
+}
+
 export default function Cars() {
     const { cars } = usePage<{ cars: Car[] }>().props;
+
+    const { data, setData, post, processing, errors } = useForm<Required<CreateCarForm>>({
+        brand: '',
+        model: '',
+        mileage: 0,
+        year: 0,
+        body_type: '',
+    });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('cars.store'));
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -33,37 +56,43 @@ export default function Cars() {
                             Add a new car to the list.
                         </DialogDescription>
                     </DialogHeader>
-                    <form method="POST" action="/cars" className="grid gap-4 py-4">
+                    <form className="grid gap-4 py-4" onSubmit={submit}>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="brand" className="text-right">
                                 Brand
                             </Label>
-                            <Input id="brand" name="brand" placeholder='Ex. Toyota' className="col-span-3" />
+                            <Input id="brand" placeholder='Ex. Toyota' className="col-span-3"
+                            onChange={(e) => setData('brand', e.target.value)} />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="model" className="text-right">
                                 Model
                             </Label>
-                            <Input id="model" name="model" placeholder='Ex. Corolla' className="col-span-3" />
+                            <Input id="model" placeholder='Ex. Corolla' className="col-span-3"
+                            onChange={(e) => setData('model', e.target.value)} />
+                            <InputError message={errors.model} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="mileage" className="text-right">
                                 Mileage
                             </Label>
-                            <Input id="mileage" name="mileage" placeholder='Ex. 100,000' className="col-span-3" />
+                            <Input id="mileage" type='number' placeholder='Ex. 100,000' className="col-span-3"
+                            onChange={(e) => setData('mileage', Number(e.target.value))} />
+                            <InputError message={errors.mileage} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="year" className="text-right">
                                 Year
                             </Label>
-                            <Input id="year" name="year" placeholder='Ex. 2015' className="col-span-3" />
-                            <InputError className="col-span-3" />
+                            <Input id="year" type='number' name="year" placeholder='Ex. 2015' className="col-span-3"
+                            onChange={(e) => setData('year', Number(e.target.value))} />
+                            <InputError message={errors.year} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
                                 Body Type
                             </Label>
-                            <Select name="body_type">
+                            <Select name="body_type" onValueChange={(value) => setData('body_type', value)}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a body type" />
                                 </SelectTrigger>
@@ -79,10 +108,13 @@ export default function Cars() {
                                 </SelectContent>
                             </Select>
                         </div>
+                        <DialogFooter>
+                            <Button type="submit" disabled={processing}>
+                                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                Save changes
+                            </Button>
+                        </DialogFooter>
                     </form>
-                    <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                    </DialogFooter>
                 </DialogContent>
             </Dialog>
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">

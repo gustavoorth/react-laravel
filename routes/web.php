@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('cars', [CarController::class, 'index'])->name('cars.index');
+    Route::post('cars', [CarController::class, 'store'])->name('cars.store');
 });
 
 require __DIR__.'/settings.php';
