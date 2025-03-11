@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\CarController;
+use App\Http\Controllers\MachineController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -13,8 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('cars', [CarController::class, 'index'])->name('cars.index');
-    Route::post('cars', [CarController::class, 'store'])->name('cars.store');
+    Route::get('machines', [MachineController::class, 'index'])->name('machines.index');
+    Route::post('machines', [MachineController::class, 'store'])->name('machines.store');
 });
 
 require __DIR__.'/settings.php';

@@ -41,12 +41,12 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface Car {
+export interface Machine {
     id: number;
     year: number;
-    body_type: string;
+    group: string;
     brand: string;
-    mileage: number;
-    model: string;
+    name: number;
+    serial_number: string;
     [key: string]: unknown; // This allows for additional properties...
 }

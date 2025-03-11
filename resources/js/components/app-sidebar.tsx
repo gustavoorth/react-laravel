@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Car } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Printer } from 'lucide-react';
 import AppLogo from './app-logo';
 import { Card } from './ui/card';
 
@@ -15,9 +15,9 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Cars',
-        url: '/cars',
-        icon: Car,
+        title: 'Máquinas',
+        url: '/machines',
+        icon: Printer,
     },
 ];
 
