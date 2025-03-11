@@ -45,7 +45,7 @@ export interface Car {
     id: number;
     year: number;
     body_type: string;
-    maker: string;
+    brand: string;
     mileage: number;
     model: string;
     [key: string]: unknown; // This allows for additional properties...

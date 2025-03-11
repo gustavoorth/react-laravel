@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Car;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
@@ -15,14 +15,17 @@ class CarController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         $request->validate([
-            'name' => 'required',
+            'brand' => 'required',
             'model' => 'required',
-            'year' => 'required',
             'mileage' => 'required',
-            'maker' => 'required',
+            'year' => 'required|integer|between:1920,2026',
             'body_type' => 'required',
+        ]);
+
+        $request->merge([
+            'brand' => ucfirst(strtolower($request->brand)),
+            'model' => ucfirst(strtolower($request->model)),
         ]);
 
         Car::create($request->all());

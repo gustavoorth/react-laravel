@@ -19,33 +19,41 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 type CreateCarForm = {
-    brand: NonNullable<string>;
-    model: NonNullable<string>;
-    mileage: NonNullable<number>;
-    year: NonNullable<number>;
-    body_type: NonNullable<string>;
+    brand: string;
+    model: string;
+    mileage: number | undefined;
+    year: number | undefined;
+    body_type: string;
 }
 
 export default function Cars() {
     const { cars } = usePage<{ cars: Car[] }>().props;
+    const [open, setOpen] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm<Required<CreateCarForm>>({
+    const { data, setData, post, processing, errors, reset } = useForm<CreateCarForm>({
         brand: '',
         model: '',
-        mileage: 0,
-        year: 0,
+        mileage: undefined,
+        year: undefined,
         body_type: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('cars.store'));
+        post(route('cars.store')), {
+            onSuccess: () => {
+                reset('brand', 'model', 'mileage', 'year', 'body_type');
+                setOpen(false);
+                console.log(data);
+                
+            },
+        };
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Cars" />
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline">Create Car</Button>
                 </DialogTrigger>
@@ -62,14 +70,15 @@ export default function Cars() {
                                 Brand
                             </Label>
                             <Input id="brand" placeholder='Ex. Toyota' className="col-span-3"
-                            onChange={(e) => setData('brand', e.target.value)} />
+                            onChange={(e) => setData('brand', e.target.value)} value={data.brand}/>
+                            <InputError message={errors.brand} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="model" className="text-right">
                                 Model
                             </Label>
                             <Input id="model" placeholder='Ex. Corolla' className="col-span-3"
-                            onChange={(e) => setData('model', e.target.value)} />
+                            onChange={(e) => setData('model', e.target.value)} value={data.model} />
                             <InputError message={errors.model} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -77,7 +86,7 @@ export default function Cars() {
                                 Mileage
                             </Label>
                             <Input id="mileage" type='number' placeholder='Ex. 100,000' className="col-span-3"
-                            onChange={(e) => setData('mileage', Number(e.target.value))} />
+                            onChange={(e) => setData('mileage', Number(e.target.value))} value={data.mileage} />
                             <InputError message={errors.mileage} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -85,14 +94,14 @@ export default function Cars() {
                                 Year
                             </Label>
                             <Input id="year" type='number' name="year" placeholder='Ex. 2015' className="col-span-3"
-                            onChange={(e) => setData('year', Number(e.target.value))} />
+                            onChange={(e) => setData('year', Number(e.target.value))} value={data.year} />
                             <InputError message={errors.year} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
                                 Body Type
                             </Label>
-                            <Select name="body_type" onValueChange={(value) => setData('body_type', value)}>
+                            <Select name="body_type" onValueChange={(value) => setData('body_type', value)} value={data.body_type}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a body type" />
                                 </SelectTrigger>
@@ -107,6 +116,7 @@ export default function Cars() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <InputError message={errors.body_type} className="col-span-3" />
                         </div>
                         <DialogFooter>
                             <Button type="submit" disabled={processing}>
@@ -122,20 +132,20 @@ export default function Cars() {
                     <TableCaption>A list of your cars.</TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">Model</TableHead>
-                            <TableHead>Year</TableHead>
+                            <TableHead>Brand</TableHead>
+                            <TableHead>Model</TableHead>
                             <TableHead>Mileage</TableHead>
-                            <TableHead>Maker</TableHead>
+                            <TableHead>Year</TableHead>
                             <TableHead>Body Type</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {cars.map((car) => (
                             <TableRow key={car.id}>
+                                <TableCell>{car.brand}</TableCell>
                                 <TableCell>{car.model}</TableCell>
-                                <TableCell>{car.year}</TableCell>
                                 <TableCell>{car.mileage}</TableCell>
-                                <TableCell>{car.maker}</TableCell>
+                                <TableCell>{car.year}</TableCell>
                                 <TableCell>{car.body_type}</TableCell>
                             </TableRow>
                         ))}

@@ -10,7 +10,7 @@ class Car extends Model
         'model',
         'year',
         'mileage',
-        'maker',
+        'brand',
         'body_type'
     ];
 }

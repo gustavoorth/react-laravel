@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('model');
             $table->integer('year');
             $table->integer('mileage');
-            $table->string('maker');
+            $table->string('brand');
             $table->string('body_type');
         });
     }
