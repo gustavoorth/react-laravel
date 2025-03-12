@@ -14,8 +14,19 @@ class Machine extends Model
         'serial_number'
     ];
 
-    
-    protected $attributes = [
-        'active' => true,
-    ];
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    public function contacts()
+    {
+        return $this->belongsToMany(Contact::class);
+    }
+
+    public function components()
+    {
+        return $this->belongsToMany(Component::class);
+    }
 }
+

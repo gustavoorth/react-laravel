@@ -1,6 +1,6 @@
 "use client"
 
-import { Machine } from "@/types"
+import { Service } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react"
 
@@ -18,7 +18,7 @@ import { Link } from "@inertiajs/react"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<Machine>[] = [
+export const columns: ColumnDef<Service>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -34,28 +34,18 @@ export const columns: ColumnDef<Machine>[] = [
         },
     },
     {
-        accessorKey: "brand",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Marca
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "description",
+        header: "Descrição",
     },
     {
-        accessorKey: "group",
+        accessorKey: "category",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Grupo
+                    Categoria
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -63,22 +53,26 @@ export const columns: ColumnDef<Machine>[] = [
         cell: (info) => (info.getValue() as string)?.charAt(0).toUpperCase() + (info.getValue() as string)?.slice(1),
     },
     {
-        accessorKey: "year",
+        accessorKey: "start",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Ano
+                    Data de início
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
     },
     {
-        accessorKey: "serial_number",
-        header: "Número de série",
+        accessorKey: "expected_time",
+        header: "Tempo estimado",
+    },
+    {
+        accessorKey: "end",
+        header: "Data de conclusão",
     },
     {
         id: "actions",

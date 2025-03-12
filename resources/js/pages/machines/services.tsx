@@ -5,63 +5,71 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, type Machine } from '@/types';
+import { type BreadcrumbItem, type Service, type Machine } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { FormEventHandler, useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
-import { columns } from './machine-columns';
+import { columns } from './service-columns';
+import { Textarea } from '@/components/ui/textarea';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Máquinas',
         href: '/machines',
     },
+    {
+        title: 'Serviços',
+        href: '/machines/services',
+    },
 ];
 
-type CreateMachineForm = {
-    brand: string;
+type CreateServiceForm = {
     name: string;
-    group: string;
-    year: number | string;
-    serial_number: string;
+    description: string;
+    category: string;
+    start: string;
+    expected_time: string;
 }
 
-export default function Index() {
-    const { machines } = usePage<{ machines: Machine[] }>().props;
+export default function Services() {
+    const { machine } = usePage<{ machine: Machine }>().props;
+    console.log(machine);
+
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm<CreateMachineForm>({
-        brand: '',
+    const { data, setData, post, processing, errors, reset } = useForm<CreateServiceForm>({
         name: '',
-        group: '',
-        year: '',
-        serial_number: '',
+        description: '',
+        category: '',
+        start: '',
+        expected_time: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('machines.store'), {
-          onSuccess: () => {
-            reset('brand', 'name', 'group', 'year', 'serial_number');
-            setOpen(false);
-          },
+        post(route('machines.update'), {
+            onSuccess: () => {
+                reset('name', 'description', 'category', 'start', 'expected_time');
+                setOpen(false);
+            },
         });
-      };
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Cars" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className='ms-4 me-4 mt-2' variant="outline">Adicionar Máquina</Button>
+                    <Button className='ms-4 me-4 mt-2' variant="outline">Criar Serviço</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Adicionar Máquina</DialogTitle>
+                        <DialogTitle>Criar Serviço</DialogTitle>
                         <DialogDescription>
-                            Adicionar uma nova máquina
+                            Preencha o formulário abaixo para criar um novo serviço
                         </DialogDescription>
                     </DialogHeader>
                     <form className="grid gap-4 py-4" onSubmit={submit}>
@@ -70,58 +78,56 @@ export default function Index() {
                                 Nome
                             </Label>
                             <Input id="name" placeholder='Nome da Máquina' className="col-span-3"
-                            onChange={(e) => setData('name', e.target.value)} value={data.name}/>
-                            <InputError message={errors.brand} className="col-span-3" />
+                                onChange={(e) => setData('name', e.target.value)} value={data.name} />
+                            <InputError message={errors.name} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="brand" className="text-right">
-                                Marca
+                            <Label htmlFor="description" className="text-right">
+                                Descrição
                             </Label>
-                            <Input id="brand" placeholder='Marca' className="col-span-3"
-                            onChange={(e) => setData('brand', e.target.value)} value={data.brand} />
-                            <InputError message={errors.brand} className="col-span-3" />
+                            <Textarea id="description" placeholder='Descrição do Serviço' className="col-span-3"
+                                onChange={(e) => setData('description', e.target.value)} value={data.description} />
+                            <InputError message={errors.description} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
                                 Grupo
                             </Label>
-                            <Select name="group" onValueChange={(value) => setData('group', value)} value={data.group}>
+                            <Select name="category" onValueChange={(value) => setData('category', value)} value={data.category}>
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Selecione o Grupo" />
+                                    <SelectValue placeholder="Categoria" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectLabel>Grupo</SelectLabel>
-                                        <SelectItem value="corte">Corte</SelectItem>
-                                        <SelectItem value="borda">Borda</SelectItem>
-                                        <SelectItem value="furacao">Furação</SelectItem>
-                                        <SelectItem value="usinagem">Usinagem</SelectItem>
-                                        <SelectItem value="fresagem">Fresagem</SelectItem>
-                                        <SelectItem value="pinagem">Pinagem</SelectItem>
-                                        <SelectItem value="embalagem">Embalagem</SelectItem>
-                                        <SelectItem value="metalurgia">Metalurgia</SelectItem>
+                                        <SelectLabel>Categorias</SelectLabel>
+                                        <SelectItem value="corretiva">Corretiva</SelectItem>
+                                        <SelectItem value="preventiva">Preventiva</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <InputError message={errors.group} className="col-span-3" />
+                            <InputError message={errors.category} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="year" className="text-right">
-                                Ano
+                            <Label htmlFor="start" className="text-right">
+                                Data e Hora de Início
                             </Label>
-                            <Input id="year" name="year" placeholder='Ano de Fabricação' className="col-span-3"
-                            onChange={(e) => setData('year', Number(e.target.value) || '')} value={data.year} />
-                            <InputError message={errors.year} className="col-span-3" />
+                            <DateTimePicker />
+                            <InputError message={errors.start} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="serial_number" className="text-right">
-                                Número de Série
+                            <Label htmlFor="expected_time" className="text-right">
+                                Tempo Estimado
                             </Label>
-                            <Input id="serial_number" name="serial_number" placeholder='Número de Série' className="col-span-3"
-                            onChange={(e) => setData('serial_number', e.target.value)} value={data.serial_number} />
-                            <InputError message={errors.serial_number} className="col-span-3" />
+                            <Input id="expected_time" placeholder='00:00' className="col-span-3"
+                                onChange={(e) => {
+                                    const timeRegex = /^([1-9])([0-9])([0-9])$/;
+                                    const formattedValue = e.target.value.replace(/[^0-9]/g, '').replace(timeRegex, '$1:$2$3');
+                                    
+                                    setData('expected_time', formattedValue);
+                                }} value={data.expected_time} />
+                            <InputError message={errors.expected_time} className="col-span-3" />
                         </div>
-                
+
                         <DialogFooter>
                             <Button type="submit" disabled={processing}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
@@ -132,7 +138,7 @@ export default function Index() {
                 </DialogContent>
             </Dialog>
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <DataTable columns={columns} data={machines} />
+                <DataTable columns={columns} data={machine.services} />
             </div>
         </AppLayout>
     );

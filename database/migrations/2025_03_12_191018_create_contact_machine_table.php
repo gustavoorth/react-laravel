@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('machines', function (Blueprint $table) {
+        Schema::create('contact_machine', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('name');
-            $table->integer('year');
-            $table->string('group');
-            $table->string('brand');
-            $table->string('serial_number');
+            $table->foreignId('contact_id')->constrained();
+            $table->foreignId('machine_id')->constrained();
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('machines');
+        Schema::dropIfExists('contact_machine');
     }
 };

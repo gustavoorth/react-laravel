@@ -48,5 +48,18 @@ export interface Machine {
     brand: string;
     name: number;
     serial_number: string;
+    services: Service[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Service {
+    id: number;
+    name: string;
+    description: string;
+    category: string;
+    start: string;
+    end: string | null;
+    expected_time: string;
+    machine_id: number;
     [key: string]: unknown; // This allows for additional properties...
 }

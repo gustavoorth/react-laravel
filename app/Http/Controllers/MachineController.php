@@ -10,7 +10,9 @@ class MachineController extends Controller
 {
     public function index()
     {
-        return Inertia::render('machines/index')->with('machines', Machine::orderBy('name')->get());
+        return Inertia::render('machines/index', [
+            'machines' => Machine::orderBy('name')->get(),
+        ]);
 
     }
 
@@ -26,6 +28,6 @@ class MachineController extends Controller
 
         Machine::create($request->all());
 
-        return redirect()->route('machines.index');
+        return redirect()->route('machines.index')->with('success', 'Máquina criada com sucesso.');
     }
 }
