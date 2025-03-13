@@ -1,9 +1,9 @@
 "use client";
- 
+
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
- 
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -13,18 +13,34 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
- 
-export function DateTimePicker() {
+import { ptBR } from 'date-fns/locale';
+
+interface DateTimePickerProps {
+  className?: string;
+  onChange?: (e: any) => void;
+  value?: string;
+}
+
+export const DateTimePicker: React.FC<DateTimePickerProps> = ({ className, onChange, ...props }) => {
   const [date, setDate] = React.useState<Date>();
   const [isOpen, setIsOpen] = React.useState(false);
- 
+
   const hours = Array.from({ length: 12 }, (_, i) => i + 1);
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
+      if (onChange) {
+        onChange(selectedDate);
+      }
     }
   };
- 
+
+  React.useEffect(() => {
+    if (props.value) {
+      setDate(new Date(props.value));
+    }
+  }, [props.value]);
+
   const handleTimeChange = (
     type: "hour" | "minute" | "ampm",
     value: string
@@ -44,9 +60,12 @@ export function DateTimePicker() {
         );
       }
       setDate(newDate);
+      if (onChange) {
+        onChange(newDate);
+      }
     }
   };
- 
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -54,14 +73,15 @@ export function DateTimePicker() {
           variant="outline"
           className={cn(
             "w-full justify-start text-left font-normal",
+            className,
             !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
-            format(date, "MM/dd/yyyy hh:mm aa")
+            format(date, "dd/MM/yyyy hh:mm aa")
           ) : (
-            <span>MM/DD/YYYY hh:mm aa</span>
+            <span>Selecione uma data</span>
           )}
         </Button>
       </PopoverTrigger>
@@ -72,9 +92,10 @@ export function DateTimePicker() {
             selected={date}
             onSelect={handleDateSelect}
             initialFocus
+            locale={ptBR}
           />
           <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto">
+            <ScrollArea className="w-64 sm:w-auto overflow-x-auto">
               <div className="flex sm:flex-col p-2">
                 {hours.reverse().map((hour) => (
                   <Button
@@ -124,8 +145,8 @@ export function DateTimePicker() {
                     size="icon"
                     variant={
                       date &&
-                      ((ampm === "AM" && date.getHours() < 12) ||
-                        (ampm === "PM" && date.getHours() >= 12))
+                        ((ampm === "AM" && date.getHours() < 12) ||
+                          (ampm === "PM" && date.getHours() >= 12))
                         ? "default"
                         : "ghost"
                     }

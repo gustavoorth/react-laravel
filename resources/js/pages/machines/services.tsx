@@ -36,8 +36,7 @@ type CreateServiceForm = {
 
 export default function Services() {
     const { machine } = usePage<{ machine: Machine }>().props;
-    console.log(machine);
-
+    
     const [open, setOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm<CreateServiceForm>({
@@ -50,7 +49,7 @@ export default function Services() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('machines.update'), {
+        post(route('services.store', { machine: machine.id }), {
             onSuccess: () => {
                 reset('name', 'description', 'category', 'start', 'expected_time');
                 setOpen(false);
@@ -60,7 +59,7 @@ export default function Services() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Cars" />
+            <Head title="Serviços" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button className='ms-4 me-4 mt-2' variant="outline">Criar Serviço</Button>
@@ -91,7 +90,7 @@ export default function Services() {
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
-                                Grupo
+                                Categoria
                             </Label>
                             <Select name="category" onValueChange={(value) => setData('category', value)} value={data.category}>
                                 <SelectTrigger className="w-[180px]">
@@ -111,7 +110,9 @@ export default function Services() {
                             <Label htmlFor="start" className="text-right">
                                 Data e Hora de Início
                             </Label>
-                            <DateTimePicker />
+                            <DateTimePicker className="col-span-3" onChange={(e) => {
+                                setData('start', e);
+                            }} value={data.start} />
                             <InputError message={errors.start} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -119,15 +120,9 @@ export default function Services() {
                                 Tempo Estimado
                             </Label>
                             <Input id="expected_time" placeholder='00:00' className="col-span-3"
-                                onChange={(e) => {
-                                    const timeRegex = /^([1-9])([0-9])([0-9])$/;
-                                    const formattedValue = e.target.value.replace(/[^0-9]/g, '').replace(timeRegex, '$1:$2$3');
-                                    
-                                    setData('expected_time', formattedValue);
-                                }} value={data.expected_time} />
+                                onChange={(e) => setData('expected_time', e.target.value)} value={data.expected_time} />
                             <InputError message={errors.expected_time} className="col-span-3" />
                         </div>
-
                         <DialogFooter>
                             <Button type="submit" disabled={processing}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

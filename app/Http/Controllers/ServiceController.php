@@ -19,7 +19,20 @@ class ServiceController extends Controller
 
     public function store(Request $request, Machine $machine)
     {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'start' => 'required',
+            'category' => 'required',
+            'expected_time' => 'required',
+        ]);
+
+        $request->merge([
+            'start' => \Carbon\Carbon::parse($request->input('start'))->toDateTimeString(),
+        ]);
+
+
         $machine->services()->create($request->all());
-        return redirect()->route('machines.services', $machine)->with('success', 'Serviço criado com sucesso.');
+        return redirect()->route('services.index', $machine)->with('success', 'Serviço criado com sucesso.');
     }
 }

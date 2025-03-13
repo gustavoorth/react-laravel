@@ -52,7 +52,7 @@ export default function Index() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Cars" />
+            <Head title="Máquinas" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button className='ms-4 me-4 mt-2' variant="outline">Adicionar Máquina</Button>
