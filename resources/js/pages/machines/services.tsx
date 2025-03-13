@@ -8,7 +8,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type Service, type Machine } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import InputError from '@/components/input-error';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from './service-columns';
@@ -30,7 +30,7 @@ type CreateServiceForm = {
     name: string;
     description: string;
     category: string;
-    start: string;
+    schedulingDate: string;
     expected_time: string;
 }
 
@@ -43,15 +43,40 @@ export default function Services() {
         name: '',
         description: '',
         category: '',
-        start: '',
+        schedulingDate: '',
         expected_time: '',
     });
+
+    const handleExpectedTimeChange = (value: string) => {
+        let val = value.replace(/[^\d]/g, "");
+
+        if (val.length > 5) {
+            return;
+        }
+
+        if (val === "") {
+          setData("expected_time", "0:00");
+          return;
+        }
+        
+        val = val.replace(/^0+/, "");
+        
+        while (val.length < 3) {
+          val = "0" + val;
+        }
+        
+        const integerPart = val.slice(0, val.length - 2);
+        const decimalPart = val.slice(val.length - 2);
+        const formattedValue = `${integerPart}:${decimalPart}`;
+        
+        setData("expected_time", formattedValue);
+      }
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('services.store', { machine: machine.id }), {
             onSuccess: () => {
-                reset('name', 'description', 'category', 'start', 'expected_time');
+                reset('name', 'description', 'category', 'schedulingDate', 'expected_time');
                 setOpen(false);
             },
         });
@@ -76,7 +101,7 @@ export default function Services() {
                             <Label htmlFor="name" className="text-right">
                                 Nome
                             </Label>
-                            <Input id="name" placeholder='Nome da Máquina' className="col-span-3"
+                            <Input id="name" placeholder='Nome do Serviço' className="col-span-3"
                                 onChange={(e) => setData('name', e.target.value)} value={data.name} />
                             <InputError message={errors.name} className="col-span-3" />
                         </div>
@@ -108,19 +133,26 @@ export default function Services() {
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="start" className="text-right">
-                                Data e Hora de Início
+                                Data de Agendamento
                             </Label>
-                            <DateTimePicker className="col-span-3" onChange={(e) => {
-                                setData('start', e);
-                            }} value={data.start} />
-                            <InputError message={errors.start} className="col-span-3" />
+                            <DateTimePicker modal className="col-span-3" onChange={(e) => {
+                                setData('schedulingDate', e);
+                            }} value={data.schedulingDate} />
+                            <InputError message={errors.schedulingDate} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="expected_time" className="text-right">
                                 Tempo Estimado
                             </Label>
                             <Input id="expected_time" placeholder='00:00' className="col-span-3"
-                                onChange={(e) => setData('expected_time', e.target.value)} value={data.expected_time} />
+                                onChange={(e) => handleExpectedTimeChange(e.target.value)} value={data.expected_time} />
+                            <InputError message={errors.expected_time} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="contact" className="text-right">
+                                Contato
+                            </Label>
+                            <Input id="contact" placeholder='' className="col-span-3" />
                             <InputError message={errors.expected_time} className="col-span-3" />
                         </div>
                         <DialogFooter>

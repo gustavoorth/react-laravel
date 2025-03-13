@@ -11,6 +11,7 @@ class Service extends Model
         'description', 
         'category',
         'start', 
+        'schedulingDate',
         'end', 
         'expected_time', 
         'machine_id'

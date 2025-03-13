@@ -57,9 +57,30 @@ export interface Service {
     name: string;
     description: string;
     category: string;
+    schedulingDate: string;
     start: string;
     end: string | null;
     expected_time: string;
     machine_id: number;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Contact {
+    id: number;
+    name: string;
+    email?: string;
+    phone: string;
+    machines: Machine[];
+    [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Component {
+    id: number;
+    name: string;
+    description: string;
+    brand: string;
+    quantity: number;
+    price: number;
+    machines: Machine[];
     [key: string]: unknown; // This allows for additional properties...
 }

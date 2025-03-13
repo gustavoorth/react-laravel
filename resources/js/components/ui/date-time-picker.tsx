@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 
@@ -14,16 +13,19 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ptBR } from 'date-fns/locale';
+import { useEffect, FC, useState } from "react";
 
 interface DateTimePickerProps {
   className?: string;
   onChange?: (e: any) => void;
   value?: string;
+  modal?: boolean;
 }
 
-export const DateTimePicker: React.FC<DateTimePickerProps> = ({ className, onChange, ...props }) => {
-  const [date, setDate] = React.useState<Date>();
-  const [isOpen, setIsOpen] = React.useState(false);
+export const DateTimePicker: FC<DateTimePickerProps> = ({ className, onChange, ...props }) => {
+  const [date, setDate] = useState<Date>();
+  const { modal = false } = props;
+  const [isOpen, setIsOpen] = useState(false);
 
   const hours = Array.from({ length: 12 }, (_, i) => i + 1);
   const handleDateSelect = (selectedDate: Date | undefined) => {
@@ -35,7 +37,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({ className, onCha
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.value) {
       setDate(new Date(props.value));
     }
@@ -67,7 +69,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({ className, onCha
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={setIsOpen} modal={modal}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

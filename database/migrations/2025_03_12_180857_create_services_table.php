@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('category');
-            $table->dateTime('start');
+            $table->dateTime('start')->nullable();
+            $table->dateTime('schedulingDate');
             $table->dateTime('end')->nullable();
             $table->time('expected_time');
             $table->foreignId('machine_id')->constrained();

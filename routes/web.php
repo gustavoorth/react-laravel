@@ -18,7 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('machines', [MachineController::class, 'store'])->name('machines.store');
     Route::get('machines/{machine}', [ServiceController::class, 'index'])->name('services.index');
     Route::post('machines/{machine}', [ServiceController::class, 'store'])->name('services.store');
-
+    Route::put('machines/{machine}/{service}/start', [ServiceController::class, 'start'])->name('services.start');
+    Route::put('machines/{machine}/{service}/finish', [ServiceController::class, 'finish'])->name('services.finish');
 });
 
 require __DIR__.'/settings.php';
