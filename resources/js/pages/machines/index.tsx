@@ -1,4 +1,3 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -71,7 +70,7 @@ export default function Index() {
                             </Label>
                             <Input id="name" placeholder='Nome da Máquina' className="col-span-3"
                             onChange={(e) => setData('name', e.target.value)} value={data.name}/>
-                            <InputError message={errors.brand} className="col-span-3" />
+                            <InputError message={errors.name} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="brand" className="text-right">

@@ -70,6 +70,7 @@ export interface Contact {
     name: string;
     email?: string;
     phone: string;
+    category: string;
     machines: Machine[];
     [key: string]: unknown; // This allows for additional properties...
 }

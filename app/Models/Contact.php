@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Contact extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'name',
         'email',
         'phone',
+        'category',
     ];
 
     public function machines(): BelongsToMany

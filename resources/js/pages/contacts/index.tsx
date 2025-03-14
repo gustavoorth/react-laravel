@@ -1,4 +1,3 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -20,31 +19,29 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type CreateMachineForm = {
-    brand: string;
+type CreateContactForm = {
     name: string;
-    group: string;
-    year: number | string;
-    serial_number: string;
+    email?: string;
+    phone: string;
+    category: string;
 }
 
 export default function Index() {
     const { contacts } = usePage<{ contacts: Contact[] }>().props;
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm<CreateMachineForm>({
-        brand: '',
+    const { data, setData, post, processing, errors, reset } = useForm<CreateContactForm>({
         name: '',
-        group: '',
-        year: '',
-        serial_number: '',
+        email: '',
+        phone: '',
+        category: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('machines.store'), {
+        post(route('contacts.store'), {
           onSuccess: () => {
-            reset('brand', 'name', 'group', 'year', 'serial_number');
+            reset('name', 'email', 'phone', 'category');
             setOpen(false);
           },
         });
@@ -52,16 +49,16 @@ export default function Index() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Máquinas" />
+            <Head title="Contatos" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className='ms-4 me-4 mt-2' variant="outline">Adicionar Máquina</Button>
+                    <Button className='ms-4 me-4 mt-2' variant="default">Adicionar Contato</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Adicionar Máquina</DialogTitle>
+                        <DialogTitle>Adicionar Contato</DialogTitle>
                         <DialogDescription>
-                            Adicionar uma nova máquina
+                            Adicionar um novo contato
                         </DialogDescription>
                     </DialogHeader>
                     <form className="grid gap-4 py-4" onSubmit={submit}>
@@ -71,57 +68,43 @@ export default function Index() {
                             </Label>
                             <Input id="name" placeholder='Nome da Máquina' className="col-span-3"
                             onChange={(e) => setData('name', e.target.value)} value={data.name}/>
-                            <InputError message={errors.brand} className="col-span-3" />
+                            <InputError message={errors.name} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="brand" className="text-right">
-                                Marca
+                                Email
                             </Label>
-                            <Input id="brand" placeholder='Marca' className="col-span-3"
-                            onChange={(e) => setData('brand', e.target.value)} value={data.brand} />
-                            <InputError message={errors.brand} className="col-span-3" />
+                            <Input id="email" placeholder='Email' className="col-span-3"
+                            onChange={(e) => setData('email', e.target.value)} value={data.email} />
+                            <InputError message={errors.email} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="phone" className="text-right">
+                                Telefone
+                            </Label>
+                            <Input id="phone" placeholder='Telefone' className="col-span-3"
+                            onChange={(e) => setData('phone', e.target.value)} value={data.phone} />
+                            <InputError message={errors.phone} className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label className="text-right">
-                                Grupo
+                                Categoria
                             </Label>
-                            <Select name="group" onValueChange={(value) => setData('group', value)} value={data.group}>
+                            <Select name="category" onValueChange={(value) => setData('category', value)} value={data.category}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Selecione o Grupo" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectLabel>Grupo</SelectLabel>
-                                        <SelectItem value="corte">Corte</SelectItem>
-                                        <SelectItem value="borda">Borda</SelectItem>
-                                        <SelectItem value="furacao">Furação</SelectItem>
-                                        <SelectItem value="usinagem">Usinagem</SelectItem>
-                                        <SelectItem value="fresagem">Fresagem</SelectItem>
-                                        <SelectItem value="pinagem">Pinagem</SelectItem>
-                                        <SelectItem value="embalagem">Embalagem</SelectItem>
-                                        <SelectItem value="metalurgia">Metalurgia</SelectItem>
+                                        <SelectLabel>Categoria</SelectLabel>
+                                        <SelectItem value="interno">Interno</SelectItem>
+                                        <SelectItem value="tecnico">Técnico</SelectItem>
+                                        <SelectItem value="fornecedor">Fornecedor</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <InputError message={errors.group} className="col-span-3" />
+                            <InputError message={errors.category} className="col-span-3" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="year" className="text-right">
-                                Ano
-                            </Label>
-                            <Input id="year" name="year" placeholder='Ano de Fabricação' className="col-span-3"
-                            onChange={(e) => setData('year', Number(e.target.value) || '')} value={data.year} />
-                            <InputError message={errors.year} className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="serial_number" className="text-right">
-                                Número de Série
-                            </Label>
-                            <Input id="serial_number" name="serial_number" placeholder='Número de Série' className="col-span-3"
-                            onChange={(e) => setData('serial_number', e.target.value)} value={data.serial_number} />
-                            <InputError message={errors.serial_number} className="col-span-3" />
-                        </div>
-                
                         <DialogFooter>
                             <Button type="submit" disabled={processing}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

@@ -87,7 +87,7 @@ export default function Services() {
             <Head title="Serviços" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className='ms-4 me-4 mt-2' variant="outline">Criar Serviço</Button>
+                    <Button className='ms-4 me-4 mt-2' variant="default">Criar Serviço</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>

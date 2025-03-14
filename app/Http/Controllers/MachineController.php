@@ -30,4 +30,15 @@ class MachineController extends Controller
 
         return redirect()->route('machines.index')->with('success', 'Máquina criada com sucesso.');
     }
+
+    public function addContact(Request $request, Machine $machine)
+    {
+        $request->validate([
+            'contact_id' => 'required|exists:contacts,id',
+        ]);
+
+        $machine->contacts()->attach($request->contact_id);
+
+        return redirect()->back()->with('success', 'Vinculo criado com sucesso.');
+    }
 }

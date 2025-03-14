@@ -13,7 +13,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Link } from "@inertiajs/react"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -34,51 +33,27 @@ export const columns: ColumnDef<Contact>[] = [
         },
     },
     {
-        accessorKey: "brand",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Marca
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "email",
+        header: "Email",
     },
     {
-        accessorKey: "group",
+        accessorKey: "phone",
+        header: "Telefone",
+    },
+    {
+        accessorKey: "category",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Grupo
+                    Categoria
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: (info) => (info.getValue() as string)?.charAt(0).toUpperCase() + (info.getValue() as string)?.slice(1),
-    },
-    {
-        accessorKey: "year",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Ano
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "serial_number",
-        header: "Número de série",
     },
     {
         id: "actions",
@@ -94,11 +69,6 @@ export const columns: ColumnDef<Contact>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Ver</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <Link href={`/machines/${row.original.id}`}>
-                            <DropdownMenuItem>
-                                Histórico
-                            </DropdownMenuItem>
-                        </Link>
                         <DropdownMenuItem>
                             Peças
                         </DropdownMenuItem>
