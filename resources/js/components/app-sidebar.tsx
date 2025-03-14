@@ -4,9 +4,8 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Printer } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, Blocks, Factory } from 'lucide-react';
 import AppLogo from './app-logo';
-import { Card } from './ui/card';
 
 const mainNavItems: NavItem[] = [
     {
@@ -17,8 +16,18 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Máquinas',
         url: '/machines',
-        icon: Printer,
+        icon: Factory,
     },
+    {
+        title: 'Contatos',
+        url: '/contacts',
+        icon: Users,
+    },
+    {
+        title: 'Componentes',
+        url: '/components',
+        icon: Blocks,
+    }
 ];
 
 const footerNavItems: NavItem[] = [

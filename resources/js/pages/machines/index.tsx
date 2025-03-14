@@ -55,7 +55,7 @@ export default function Index() {
             <Head title="Máquinas" />
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className='ms-4 me-4 mt-2' variant="outline">Adicionar Máquina</Button>
+                    <Button className='ms-4 me-4 mt-2' variant="default">Adicionar Máquina</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
